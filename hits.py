@@ -13,6 +13,8 @@ class Node:
 		self.hub_score=1
 		self.HITS_score=0
 		self.position=count
+		self.PRscore=0
+
 	def __repr__(self):
 		return self.name
 
@@ -115,7 +117,7 @@ class Graph:
 		self.printStructure()
 
 	def hubs_and_authorities(self):
-		for k in range(100000):
+		for k in range(1000):
 			print k
 			norm = 0.0
 			prev_hub_score={}
@@ -145,7 +147,7 @@ class Graph:
 					prev_hub_score[p]=p.hub_score
 
 			norm = 0.0
-			#update git scores
+			#update hub scores
 			for p in self.structure:
 				p.hub_score = 0.0
 				for r in self.structure[p]:
@@ -174,41 +176,8 @@ class Graph:
 		#print("HITS")
 		for key in self.structure:
 			print(key.name," ",key.HITS_score," ",key.position)
-	def textRank(self):
-		for k in range(10000):
-			prev_PRscore={}
-			#store current Page Rank scores
-			for p in self.structure:
-				if p not in prev_PRscore:
-					prev_PRscore[p]={}
-					prev_PRscore[p]=p.PRscore
-				else:
-					prev_PRscore[p]=p.PRscore
-			#update all PR scores
-			for p in self.structure:
-			#print " p is ",p
-				incomingEdges=[]
-				for key in self.structure:
-					for innerkey in self.structure[key]:
-						if(innerkey.name==p.name):
-							incomingEdges.append(key)
-				#print " incomingEdges ",incomingEdges
-				innerScore=0
-				for q in incomingEdges:
-					weightTot=0
-					for r in self.structures[q]:
-						weightTot+=self.structures[q][r]
-					innerScore += (float)(self.structures[p][q]*q.PRscore/weightTot))
-				p.PRscore=0.15+(0.85*(innerScore))
-				delta=0
-				for key in self.structure:
-					delta+=abs(prev_PRscore[key] - key.PRscore)
-				#print("Delta:",delta)
-				if delta==min_delta:
-					for each in self.structure:
-						print(each.name," ",each.PRscore)
-					return
-	def sort_nodes(self,n):
+	
+	def sort_nodes_hits(self,n):
 		#print self.structure.keys()
 		print "sorted n list "
 		final_list = sorted(self.structure.keys())[:n]
@@ -224,14 +193,68 @@ class Graph:
 			print each.name,each.HITS_score,each.position
 		return sorted_x
 
+	def sort_nodes_textrank(self,n):
+		#print self.structure.keys()
+		print "sorted n list "
+		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:n]
+		#print final_list
+		for each in final_list:
+			print each.name,each.PRscore,each.position
 
+		position_sorted=sorted(final_list)
+		print 
+		print "sorted on position"
+		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
+		for each in sorted_x:
+			print each.name,each.PRscore,each.position
+		return sorted_x
 
+	def textRank(self):
+		print "inside "
+		for k in range(10000):
+			print k
+			prev_PRscore={}
+			#store current Page Rank scores
+			for p in self.structure:
+				if p not in prev_PRscore:
+					prev_PRscore[p]={}
+					prev_PRscore[p]=p.PRscore
+				else:
+					prev_PRscore[p]=p.PRscore
+			#update all PR scores
+			for p in self.structure:
+				#print " p is ",p
+				incomingEdges=[]
+				for key in self.structure:
+					for innerkey in self.structure[key]:
+						if(innerkey.name==p.name):
+							incomingEdges.append(key)
+				#print " incomingEdges ",incomingEdges
+				innerScore=0
+				for q in incomingEdges:
+					weightTot=0
+					for r in self.structure[q]:
+						weightTot+=self.structure[q][r]
+					innerScore += (self.structure[q][p]*q.PRscore)/weightTot
+				p.PRscore=0.15+(0.85*(innerScore))
+				delta=0
+				for key in self.structure:
+					delta+=abs(prev_PRscore[key] - key.PRscore)
+				#print("Delta:",delta)
+				if delta==min_delta:
+					for each in self.structure:
+						print(each.name," ",each.PRscore)
+					return
 
-graph=Graph()
-data=readData('/home/saurbh/nlp/project/englishdata/reuters0.txt','english')
-#graph.set_structure([["d1","d2"],["d1","d3"],["d2","d1"],["d2","d3"],["d3","d2"],["d3","d4"],["d4","d2"]])
-graph.set_structure(data)
-graph.hubs_and_authorities()
-graph.HITS()
-n=sys.argv[1]
-graph.sort_nodes(int(n))
+def hitsMain(n):
+	graph=Graph()
+	data=readData('/home/saurbh/nlp/project/englishdata/reuters3.txt','english')
+	#graph.set_structure([["d1","d2"],["d1","d3"],["d2","d1"],["d2","d3"],["d3","d2"],["d3","d4"],["d4","d2"]])
+	graph.set_structure(data)
+	graph.hubs_and_authorities()
+	graph.HITS()
+	graph.sort_nodes_hits(n)
+	#graph.textRank()
+	#return graph.sort_nodes_textrank(n)
+
+hitsMain(int(sys.argv[1]))
