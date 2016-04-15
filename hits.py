@@ -174,7 +174,40 @@ class Graph:
 		#print("HITS")
 		for key in self.structure:
 			print(key.name," ",key.HITS_score," ",key.position)
-	
+	def textRank(self):
+		for k in range(10000):
+			prev_PRscore={}
+			#store current Page Rank scores
+			for p in self.structure:
+				if p not in prev_PRscore:
+					prev_PRscore[p]={}
+					prev_PRscore[p]=p.PRscore
+				else:
+					prev_PRscore[p]=p.PRscore
+			#update all PR scores
+			for p in self.structure:
+			#print " p is ",p
+				incomingEdges=[]
+				for key in self.structure:
+					for innerkey in self.structure[key]:
+						if(innerkey.name==p.name):
+							incomingEdges.append(key)
+				#print " incomingEdges ",incomingEdges
+				innerScore=0
+				for q in incomingEdges:
+					weightTot=0
+					for r in self.structures[q]:
+						weightTot+=self.structures[q][r]
+					innerScore += (float)(self.structures[p][q]*q.PRscore/weightTot))
+				p.PRscore=0.15+(0.85*(innerScore))
+				delta=0
+				for key in self.structure:
+					delta+=abs(prev_PRscore[key] - key.PRscore)
+				#print("Delta:",delta)
+				if delta==min_delta:
+					for each in self.structure:
+						print(each.name," ",each.PRscore)
+					return
 	def sort_nodes(self,n):
 		#print self.structure.keys()
 		print "sorted n list "
