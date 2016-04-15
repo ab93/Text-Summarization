@@ -17,6 +17,14 @@ class Node:
 	def __hash__(self):
 		return hash(self.name)
 
+	def __cmp__(self, other):
+		if self.HITS_score > other.HITS_score:
+			return 1
+		elif self.HITS_score < other.HITS_score:
+			return -1
+		else:
+			return 0
+
 
 class Graph:
 	def __init__(self):
@@ -128,16 +136,28 @@ class Graph:
 					p.hub_score += r.auth_score
 				norm += math.pow(p.hub_score,2)
 			norm = math.sqrt(norm)
-			print "norm:",norm
+			#print "norm:",norm
 			for p in self.structure:
 				p.hub_score = p.hub_score / norm
 		print k
-		self.printNodes()
+		#self.printNodes()
 
-
-
+	def HITS(self):
+		for key in self.structure:
+			key.HITS_score=(key.hub_score+key.auth_score)/2
+		#print("HITS")
+		for key in self.structure:
+			print(key.name," ",key.HITS_score)
+	def sort_nodes(self):
+		#print self.structure.keys()
+		final_list = sorted(self.structure.keys())
+		print final_list
+		for each in final_list:
+			print each.name,each.HITS_score
 
 
 graph=Graph()
 graph.set_structure([["d1","d2"],["d1","d3"],["d2","d1"],["d2","d3"],["d3","d2"],["d3","d4"],["d4","d2"]])
 graph.hubs_and_authorities()
+graph.HITS()
+graph.sort_nodes()
