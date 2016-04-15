@@ -1,13 +1,18 @@
 import pprint
 import math
+from preprocess import readData
+import operator
+import sys
+
 min_delta=0
+
 class Node:
-	def __init__(self,name):
+	def __init__(self,name,count):
 		self.name=name
 		self.auth_score=1
 		self.hub_score=1
 		self.HITS_score=0
-		self.position=0
+		self.position=count
 	def __repr__(self):
 		return self.name
 
@@ -18,9 +23,9 @@ class Node:
 		return hash(self.name)
 
 	def __cmp__(self, other):
-		if self.HITS_score > other.HITS_score:
+		if self.HITS_score < other.HITS_score:
 			return 1
-		elif self.HITS_score < other.HITS_score:
+		elif self.HITS_score > other.HITS_score:
 			return -1
 		else:
 			return 0
@@ -60,32 +65,34 @@ class Graph:
 				print "hub_score ",key2.hub_score
 				print "auth_score ",key2.auth_score
 
-	def setNode(self,word):
+	def setNode(self,word,count):
 		if word in self.nodeHash:
 			node = self.nodeHash[word]
 		else:
-			node = Node(word)
+			node = Node(word,count)
 			self.nodeHash[word] = node
 
 		return node
 
 	def set_structure(self,wordlist):
+		count=-1
 		structure=self.structure
 		window=self.window
 		#nodeList=self.nodeList
 		for sentence in wordlist:
 			for index in range(len(sentence)):
+				count+=1
 				curr_word=sentence[index]
 				next_words=sentence[index+1:index+window]
 
-				curr_node = self.setNode(curr_word)
+				curr_node = self.setNode(curr_word,count)
 				#curr_node=Node(curr_word)
 				#print "current node ",curr_node
 				if(len(structure)==0):
 					#print "first time"
 					structure[curr_node]={}
 					for word in next_words:
-						next_node = self.setNode(word)
+						next_node = self.setNode(word,count+next_words.index(word)+1)
 						#next_node=Node(word)
 
 						structure[curr_node][next_node]=1
@@ -95,20 +102,21 @@ class Graph:
 						#print "present ",curr_node
 						for word in next_words:
 							#next_node=Node(word)
-							next_node = self.setNode(word)
+							next_node = self.setNode(word,count+next_words.index(word)+1)
 							structure[curr_node][next_node]=1
 
 					else:
 						structure[curr_node]={}
 						for word in next_words:
-							next_node = self.setNode(word)
+							next_node = self.setNode(word,count+next_words.index(word)+1)
 							#next_node=Node(word)
 							structure[curr_node][next_node]=1
 
 		self.printStructure()
 
 	def hubs_and_authorities(self):
-		for k in range(10000):
+		for k in range(100000):
+			print k
 			norm = 0.0
 			prev_hub_score={}
 			#update all authority scores
@@ -157,7 +165,7 @@ class Graph:
 				# 	print(each.name," ",each.auth_score," ",each.hub_score)
 				return
 
-		print k
+		
 		#self.printNodes()
 
 	def HITS(self):
@@ -165,17 +173,32 @@ class Graph:
 			key.HITS_score=(key.hub_score+key.auth_score)/2
 		#print("HITS")
 		for key in self.structure:
-			print(key.name," ",key.HITS_score)
-	def sort_nodes(self):
+			print(key.name," ",key.HITS_score," ",key.position)
+	
+	def sort_nodes(self,n):
 		#print self.structure.keys()
-		final_list = sorted(self.structure.keys())
+		print "sorted n list "
+		final_list = sorted(self.structure.keys())[:n]
 		#print final_list
 		for each in final_list:
-			print each.name,each.HITS_score
+			print each.name,each.HITS_score,each.position
+
+		position_sorted=sorted(final_list)
+		print 
+		print "sorted on position"
+		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
+		for each in sorted_x:
+			print each.name,each.HITS_score,each.position
+		return sorted_x
+
+
 
 
 graph=Graph()
-graph.set_structure([["d1","d2"],["d1","d3"],["d2","d1"],["d2","d3"],["d3","d2"],["d3","d4"],["d4","d2"]])
+data=readData('/home/saurbh/nlp/project/englishdata/reuters0.txt','english')
+#graph.set_structure([["d1","d2"],["d1","d3"],["d2","d1"],["d2","d3"],["d3","d2"],["d3","d4"],["d4","d2"]])
+graph.set_structure(data)
 graph.hubs_and_authorities()
 graph.HITS()
-graph.sort_nodes()
+n=sys.argv[1]
+graph.sort_nodes(int(n))
