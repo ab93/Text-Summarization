@@ -21,6 +21,8 @@ def cleanLine(line,finalList,lang):
         return None
 
     line = line.decode('utf-8').lower()
+    notNum = re.compile(r'[0-9]+')
+    line = notNum.sub('',line)
     words = line.split(' ')
     impWords = filter(lambda x: x not in stopwords.words(lang), words)
     line = ' '.join(impWords)
@@ -34,3 +36,4 @@ def cleanLine(line,finalList,lang):
     return finalList
 
 #readData('data/2010-2013/2010-13c0.txt','english')
+#readData('englishdata/reuters0.txt','english')
