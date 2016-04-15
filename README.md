@@ -1,4 +1,4 @@
-Spanish Text Summarization using Keyword Extraction
+<h2>Spanish Text Summarization using Keyword Extraction</h2>
 
 This project aims to build a system that can summarize Spanish news articles into concise headlines, using keyword extraction techniques.
 
