@@ -1,13 +1,13 @@
 import pprint
 import math
-
+min_delta=0
 class Node:
 	def __init__(self,name):
 		self.name=name
 		self.auth_score=1
 		self.hub_score=1
 		self.HITS_score=0
-
+		self.position=0
 	def __repr__(self):
 		return self.name
 
@@ -108,8 +108,9 @@ class Graph:
 		self.printStructure()
 
 	def hubs_and_authorities(self):
-		for k in range(1):
+		for k in range(10000):
 			norm = 0.0
+			prev_hub_score={}
 			#update all authority scores
 			for p in self.structure:
 				#print " p is ",p
@@ -127,6 +128,14 @@ class Graph:
 			#normalize
 			for p in self.structure:
 				p.auth_score = p.auth_score / norm
+
+			for p in self.structure:
+				if p not in prev_hub_score:
+					prev_hub_score[p]={}
+					prev_hub_score[p]=p.hub_score
+				else:
+					prev_hub_score[p]=p.hub_score
+
 			norm = 0.0
 			#update git scores
 			for p in self.structure:
@@ -139,6 +148,15 @@ class Graph:
 			#print "norm:",norm
 			for p in self.structure:
 				p.hub_score = p.hub_score / norm
+			delta=0
+			for key in self.structure:
+				delta+=abs(prev_hub_score[key] - key.hub_score)
+			#print("Delta:",delta)
+			if delta==min_delta:
+				# for each in self.structure:
+				# 	print(each.name," ",each.auth_score," ",each.hub_score)
+				return
+
 		print k
 		#self.printNodes()
 
@@ -151,7 +169,7 @@ class Graph:
 	def sort_nodes(self):
 		#print self.structure.keys()
 		final_list = sorted(self.structure.keys())
-		print final_list
+		#print final_list
 		for each in final_list:
 			print each.name,each.HITS_score
 
