@@ -3,22 +3,26 @@ import os
 import nltk.data
 from nltk.corpus import stopwords
 
-def readData(filename):
+def readData(filename,lang='spanish'):
     sentList = []
     with open(filename,'r') as fp:
         for line in fp:
             line = line.strip()
-            sentList = cleanLine(line,sentList)
+            sentList = cleanLine(line,sentList,lang)
 
     return sentList
 
 
-def cleanLine(line,finalList):
-    tokenizer = nltk.data.load('tokenizers/punkt/spanish.pickle')
+def cleanLine(line,finalList,lang):
+    try:
+        tokenizer = nltk.data.load('tokenizers/punkt/'+ lang + '.pickle')
+    except:
+        "language not supported!!"
+        return None
 
     line = line.decode('utf-8').lower()
     words = line.split(' ')
-    impWords = filter(lambda x: x not in stopwords.words('spanish'), words)
+    impWords = filter(lambda x: x not in stopwords.words(lang), words)
     line = ' '.join(impWords)
 
     sentList = tokenizer.tokenize(line)
@@ -28,3 +32,5 @@ def cleanLine(line,finalList):
         finalList.append(words)
 
     return finalList
+
+#readData('data/2010-2013/2010-13c0.txt','english')
