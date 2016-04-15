@@ -10,11 +10,13 @@ class Node:
 
 	def __repr__(self):
 		return self.name
+
 	def __eq__(self, other):
 		return self.name == other.name
+
 	def __hash__(self):
 		return hash(self.name)
-	
+
 
 class Graph:
 	def __init__(self):
@@ -22,13 +24,17 @@ class Graph:
 		self.threshold=0
 		self.window=2
 		self.nodeList=[]
+		self.nodeHash = {}
 
 	def set_threshold(self,thresh):
 		self.threshold=thresh
+
 	def set_window(self,win):
 		self.window=win
+
 	def printStructure(self):
 		pprint.pprint(self.structure)
+
 	def find(self,curr_node):
 		for obj in self.structure:
 			if obj==curr_node:
@@ -37,11 +43,23 @@ class Graph:
 
 	def printNodes(self):
 		for key in self.structure:
-			print "text ",key.name
+			print "\ntext ",key.name
 			print "hub_score ",key.hub_score
 			print "auth_score ",key.auth_score
-			
+			print("Inside:")
+			for key2 in self.structure[key]:
+				print "text ",key2.name
+				print "hub_score ",key2.hub_score
+				print "auth_score ",key2.auth_score
 
+	def setNode(self,word):
+		if word in self.nodeHash:
+			node = self.nodeHash[word]
+		else:
+			node = Node(word)
+			self.nodeHash[word] = node
+
+		return node
 
 	def set_structure(self,wordlist):
 		structure=self.structure
@@ -51,38 +69,43 @@ class Graph:
 			for index in range(len(sentence)):
 				curr_word=sentence[index]
 				next_words=sentence[index+1:index+window]
-				curr_node=Node(curr_word)
+
+				curr_node = self.setNode(curr_word)
+				#curr_node=Node(curr_word)
 				#print "current node ",curr_node
 				if(len(structure)==0):
 					#print "first time"
 					structure[curr_node]={}
 					for word in next_words:
-						next_node=Node(word)
-						
+						next_node = self.setNode(word)
+						#next_node=Node(word)
+
 						structure[curr_node][next_node]=1
 				else:
-					
+
 					if(self.find(curr_node)):
 						#print "present ",curr_node
 						for word in next_words:
-							next_node=Node(word)
+							#next_node=Node(word)
+							next_node = self.setNode(word)
 							structure[curr_node][next_node]=1
-						
+
 					else:
 						structure[curr_node]={}
 						for word in next_words:
-							next_node=Node(word)
+							next_node = self.setNode(word)
+							#next_node=Node(word)
 							structure[curr_node][next_node]=1
 
 		self.printStructure()
-		
+
 	def hubs_and_authorities(self):
-		for k in range(10000):
-			norm = 0
+		for k in range(1):
+			norm = 0.0
 			#update all authority scores
 			for p in self.structure:
 				#print " p is ",p
-				p.auth_score = 0
+				p.auth_score = 0.0
 				incomingEdges=[]
 				for key in self.structure:
 					for innerkey in self.structure[key]:
@@ -96,19 +119,20 @@ class Graph:
 			#normalize
 			for p in self.structure:
 				p.auth_score = p.auth_score / norm
-			norm = 0
+			norm = 0.0
 			#update git scores
 			for p in self.structure:
-				p.hub_score = 0
+				p.hub_score = 0.0
 				for r in self.structure[p]:
+					#print r, r.auth_score
 					p.hub_score += r.auth_score
 				norm += math.pow(p.hub_score,2)
 			norm = math.sqrt(norm)
+			print "norm:",norm
 			for p in self.structure:
 				p.hub_score = p.hub_score / norm
 		print k
 		self.printNodes()
-
 
 
 
