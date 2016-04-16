@@ -5,6 +5,9 @@ import operator
 import sys
 
 min_delta=0
+data=[]
+final_list=[]
+finaldata=[]
 
 class Node:
 	def __init__(self,name,count,p_dist):
@@ -111,6 +114,7 @@ class Graph:
 
 
 	def sort_nodes_textrank(self,n):
+		global final_list
 		#print self.structure.keys()
 		print "sorted n list "
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:n]
@@ -164,24 +168,34 @@ class Graph:
 					return
 
 	def summarize(self):
-		
+		finalScores={}
+		for i in range(0,len(data)):
+			pd=self.pd_calculator((i+1)/float(len(data)+1))
+			#print "pd",pd
+			sum_keywords=0
+			for word in final_list:
+				if word.name in data[i]:
+					sum_keywords+=word.PRscore
+
+			finalScores[i]=pd*sum_keywords
+			#print "final scores", sum_keywords
+		sorted_finalScores = sorted(finalScores.items(), key=operator.itemgetter(1),reverse=True)
+		print sorted_finalScores
+
+		for (i,j) in sorted_finalScores:
+			print finaldata[i]
+
 
 def textRankMain(n):
-	global countWords
+	global countWords,data,finaldata
 	graph=Graph()
-	data=readData('/home/saurbh/nlp/project/englishdata/reuters18.txt','english')
-	countWords=0
-	
-	#graph.set_structure([["d1","d2"],["d1","d3"],["d2","d1"],["d2","d3"],["d3","d2"],["d3","d4"],["d4","d2"]])
-	for i in data:
-		print i
-		for j in i:
-			countWords+=1
+	data,finaldata,countWords=readData('/home/saurbh/nlp/project/englishdata/reuters3.txt','english')
 	print countWords
 	#raw_input()
 	graph.set_structure(data)
 
 	graph.textRank()
 	graph.sort_nodes_textrank(n)
-
+	graph.summarize()
+	
 textRankMain(int(sys.argv[1]))
