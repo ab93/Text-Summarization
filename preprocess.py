@@ -4,6 +4,9 @@ import nltk.data
 from nltk.corpus import stopwords
 
 def readData(filename,lang='spanish'):
+	'''
+	Return the [ s1[w1,w2,w3..], s2[w1,w2,w3..] ...] and length of doc
+	'''
 	sentList = []
 	lenDoc = 0
 	with open(filename,'r') as fp:
@@ -36,6 +39,7 @@ def cleanLine(line,finalList,lenDoc,lang):
 		lenDoc += len(words)
 
 	return finalList, lenDoc
+
 
 #readData('data/data/2010-2013/2010-13c0.txt')
 #readData('englishdata/reuters0.txt','english')
