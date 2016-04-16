@@ -23,7 +23,7 @@ def cleanLine(line,finalList,sentList,lenDoc,lang):
 	try:
 		tokenizer = nltk.data.load('tokenizers/punkt/'+ lang + '.pickle')
 	except:
-		"language not supported!!"
+		print "Language not Supported"
 		return None
 
 	tempList = tokenizer.tokenize(line.decode('utf-8'))
