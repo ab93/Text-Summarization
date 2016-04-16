@@ -50,12 +50,12 @@ class Graph:
 				return True
 		return False
 	def pd_calculator(self,position):
-		print position
+		# print position
 		return 1.0/(math.pi*math.sqrt(position*(1-position)))
 	
 
 	def setNode(self,word,count):
-		print count,count/float(countWords+1)
+		# print count,count/float(countWords+1)
 		if word in self.nodeHash:
 
 			node = self.nodeHash[word]
@@ -116,24 +116,24 @@ class Graph:
 	def sort_nodes_textrank(self,n):
 		global final_list
 		#print self.structure.keys()
-		print "sorted n list "
+		# print "sorted n list "
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:n]
 		#print final_list
-		for each in final_list:
-			print each.name,each.PRscore,each.position
+		# for each in final_list:
+		# 	print each.name,each.PRscore,each.position
 
 		position_sorted=sorted(final_list)
-		print 
-		print "sorted on position"
+		# print 
+		# print "sorted on position"
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
-		for each in sorted_x:
-			print each.name,each.PRscore,each.position
+		# for each in sorted_x:
+		# 	print each.name,each.PRscore,each.position
 		return sorted_x
 
 	def textRank(self):
-		print "inside "
+		# print "inside "
 		for k in range(10000):
-			print k
+			# print k
 			prev_PRscore={}
 			#store current Page Rank scores
 			for p in self.structure:
@@ -163,8 +163,8 @@ class Graph:
 					delta+=abs(prev_PRscore[key] - key.PRscore)
 				#print("Delta:",delta)
 				if delta==min_delta:
-					for each in self.structure:
-						print(each.name," ",each.PRscore)
+					# for each in self.structure:
+					# 	print(each.name," ",each.PRscore)
 					return
 
 	def summarize(self):
@@ -180,22 +180,25 @@ class Graph:
 			finalScores[i]=pd*sum_keywords
 			#print "final scores", sum_keywords
 		sorted_finalScores = sorted(finalScores.items(), key=operator.itemgetter(1),reverse=True)
-		print sorted_finalScores
+		# print sorted_finalScores
 
-		for (i,j) in sorted_finalScores:
-			print finaldata[i]
+		# for (i,j) in sorted_finalScores:
+		# 	print finaldata[i]
 
 
-def textRankMain(n):
+def textRankMain(data,n):
 	global countWords,data,finaldata
 	graph=Graph()
-	data,finaldata,countWords=readData('/home/saurbh/nlp/project/englishdata/reuters3.txt','english')
-	print countWords
-	#raw_input()
+	data,finaldata,countWords=readData(data,'english')
+	# print countWords
 	graph.set_structure(data)
-
 	graph.textRank()
-	graph.sort_nodes_textrank(n)
-	graph.summarize()
+	answer=graph.sort_nodes_textrank(n)
+	result=[]
+	for i in range(0,len(answer)):
+		result.append(answer[i].name)
+
+	return result
+	# graph.summarize()
 	
-textRankMain(int(sys.argv[1]))
+# textRankMain(int(sys.argv[1]))
