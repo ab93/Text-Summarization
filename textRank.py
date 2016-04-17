@@ -106,7 +106,7 @@ class Graph:
 							#next_node=Node(word)
 							structure[curr_node][next_node]=(curr_node.position_dist+next_node.position_dist)/2
 
-		self.printStructure()
+		# self.printStructure()
 
 	
 
@@ -186,10 +186,10 @@ class Graph:
 		# 	print finaldata[i]
 
 
-def textRankMain(data,n):
+def textRankMain(input_data,n):
 	global countWords,data,finaldata
 	graph=Graph()
-	data,finaldata,countWords=readData(data,'english')
+	data,finaldata,countWords=readData(input_data,'english')
 	# print countWords
 	graph.set_structure(data)
 	graph.textRank()

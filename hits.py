@@ -114,11 +114,11 @@ class Graph:
 							#next_node=Node(word)
 							structure[curr_node][next_node]=1
 
-		self.printStructure()
+		# self.printStructure()
 
 	def hubs_and_authorities(self):
 		for k in range(1000):
-			print k
+			# print k
 			norm = 0.0
 			prev_hub_score={}
 			#update all authority scores
@@ -167,52 +167,52 @@ class Graph:
 				# 	print(each.name," ",each.auth_score," ",each.hub_score)
 				return
 
-		
+
 		#self.printNodes()
 
 	def HITS(self):
 		for key in self.structure:
 			key.HITS_score=(key.hub_score+key.auth_score)/2
 		#print("HITS")
-		for key in self.structure:
-			print(key.name," ",key.HITS_score," ",key.position)
-	
+		# for key in self.structure:
+			# print(key.name," ",key.HITS_score," ",key.position)
+
 	def sort_nodes_hits(self,n):
 		#print self.structure.keys()
-		print "sorted n list "
+		# print "sorted n list "
 		final_list = sorted(self.structure.keys())[:n]
 		#print final_list
-		for each in final_list:
-			print each.name,each.HITS_score,each.position
+		# for each in final_list:
+			# print each.name,each.HITS_score,each.position
 
 		position_sorted=sorted(final_list)
-		print 
-		print "sorted on position"
+		# print
+		# print "sorted on position"
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
-		for each in sorted_x:
-			print each.name,each.HITS_score,each.position
+		# for each in sorted_x:
+			# print each.name,each.HITS_score,each.position
 		return sorted_x
 
 	def sort_nodes_textrank(self,n):
 		#print self.structure.keys()
-		print "sorted n list "
+		# print "sorted n list "
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:n]
 		#print final_list
-		for each in final_list:
-			print each.name,each.PRscore,each.position
+		# for each in final_list:
+			# print each.name,each.PRscore,each.position
 
 		position_sorted=sorted(final_list)
-		print 
-		print "sorted on position"
+		# print
+		# print "sorted on position"
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
-		for each in sorted_x:
-			print each.name,each.PRscore,each.position
+		# for each in sorted_x:
+			# print each.name,each.PRscore,each.position
 		return sorted_x
 
 	def textRank(self):
-		print "inside "
+		# print "inside "
 		for k in range(10000):
-			print k
+			# print k
 			prev_PRscore={}
 			#store current Page Rank scores
 			for p in self.structure:
@@ -242,19 +242,26 @@ class Graph:
 					delta+=abs(prev_PRscore[key] - key.PRscore)
 				#print("Delta:",delta)
 				if delta==min_delta:
-					for each in self.structure:
-						print(each.name," ",each.PRscore)
+					# for each in self.structure:
+					# 	print(each.name," ",each.PRscore)
 					return
 
-def hitsMain(n):
+def hitsMain(input_data,n):
 	graph=Graph()
-	data=readData('/home/saurbh/nlp/project/englishdata/reuters3.txt','english')
+	# print input_data
+	data=readData(input_data,'english')
 	#graph.set_structure([["d1","d2"],["d1","d3"],["d2","d1"],["d2","d3"],["d3","d2"],["d3","d4"],["d4","d2"]])
+	# print data
 	graph.set_structure(data)
-	graph.hubs_and_authorities()
-	graph.HITS()
-	graph.sort_nodes_hits(n)
-	#graph.textRank()
-	#return graph.sort_nodes_textrank(n)
+	# graph.hubs_and_authorities()
+	# graph.HITS()
+	# answer=graph.sort_nodes_hits(n)
+	graph.textRank()
+	answer=graph.sort_nodes_textrank(n)
+	result=[]
+	for item in answer:
+		result.append(item.name)
+	return result
 
-hitsMain(int(sys.argv[1]))
+
+#hitsMain(int(sys.argv[1]))

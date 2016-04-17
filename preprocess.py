@@ -47,5 +47,5 @@ def cleanLine(line,finalList,sentList,lenDoc,lang):
 	return finalList, sentList, lenDoc
 
 
-readData('data/data/2010-2013/2010-13c0.txt')
+# readData('data/data/2010-2013/2010-13c0.txt')
 #readData('englishdata/reuters0.txt','english')
