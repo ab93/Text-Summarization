@@ -49,108 +49,70 @@ class Graph:
 			if obj==curr_node:
 				return True
 		return False
+
 	def pd_calculator(self,position):
-		# print position
 		return 1.0/(math.pi*math.sqrt(position*(1-position)))
 	
 
 	def setNode(self,word,count):
-		# print count,count/float(countWords+1)
 		if word in self.nodeHash:
-
 			node = self.nodeHash[word]
-
 			if(node.position_dist<self.pd_calculator(count/float(countWords+1))):
 				node.position_dist=self.pd_calculator(count/float(countWords+1))
 		else:
 			node = Node(word,count,self.pd_calculator(count/float(countWords+1)))
 			self.nodeHash[word] = node
-
 		return node
 
 	def set_structure(self,wordlist):
 		count=0
 		structure=self.structure
 		window=self.window
-		#nodeList=self.nodeList
 		for sentence in wordlist:
 			for index in range(len(sentence)):
 				count+=1
 				curr_word=sentence[index]
 				next_words=sentence[index+1:index+window]
-
 				curr_node = self.setNode(curr_word,count)
-				#curr_node=Node(curr_word)
-				#print "current node ",curr_node
 				if(len(structure)==0):
-					#print "first time"
 					structure[curr_node]={}
 					for word in next_words:
 						next_node = self.setNode(word,count+next_words.index(word)+1)
-						#next_node=Node(word)
-
 						structure[curr_node][next_node]=(curr_node.position_dist+next_node.position_dist)/2
 				else:
-
 					if(self.find(curr_node)):
-						#print "present ",curr_node
 						for word in next_words:
-							#next_node=Node(word)
 							next_node = self.setNode(word,count+next_words.index(word)+1)
 							structure[curr_node][next_node]=(curr_node.position_dist+next_node.position_dist)/2
-
 					else:
 						structure[curr_node]={}
 						for word in next_words:
 							next_node = self.setNode(word,count+next_words.index(word)+1)
-							#next_node=Node(word)
 							structure[curr_node][next_node]=(curr_node.position_dist+next_node.position_dist)/2
-
-		# self.printStructure()
-
-	
-
-	
 
 
 	def sort_nodes_textrank(self,n):
 		global final_list
-		#print self.structure.keys()
-		# print "sorted n list "
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:n]
-		#print final_list
-		# for each in final_list:
-		# 	print each.name,each.PRscore,each.position
-
 		position_sorted=sorted(final_list)
-		# print 
-		# print "sorted on position"
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
-		# for each in sorted_x:
-		# 	print each.name,each.PRscore,each.position
 		return sorted_x
 
 	def textRank(self):
-		# print "inside "
 		for k in range(10000):
-			# print k
 			prev_PRscore={}
-			#store current Page Rank scores
 			for p in self.structure:
 				if p not in prev_PRscore:
 					prev_PRscore[p]={}
 					prev_PRscore[p]=p.PRscore
 				else:
 					prev_PRscore[p]=p.PRscore
-			#update all PR scores
 			for p in self.structure:
-				#print " p is ",p
 				incomingEdges=[]
 				for key in self.structure:
 					for innerkey in self.structure[key]:
 						if(innerkey.name==p.name):
 							incomingEdges.append(key)
-				#print " incomingEdges ",incomingEdges
 				innerScore=0
 				for q in incomingEdges:
 					weightTot=0
@@ -161,44 +123,36 @@ class Graph:
 				delta=0
 				for key in self.structure:
 					delta+=abs(prev_PRscore[key] - key.PRscore)
-				#print("Delta:",delta)
 				if delta==min_delta:
-					# for each in self.structure:
-					# 	print(each.name," ",each.PRscore)
 					return
 
-	def summarize(self):
+	def summarize(self,m):
 		finalScores={}
 		for i in range(0,len(data)):
 			pd=self.pd_calculator((i+1)/float(len(data)+1))
-			#print "pd",pd
 			sum_keywords=0
 			for word in final_list:
 				if word.name in data[i]:
 					sum_keywords+=word.PRscore
-
 			finalScores[i]=pd*sum_keywords
-			#print "final scores", sum_keywords
-		sorted_finalScores = sorted(finalScores.items(), key=operator.itemgetter(1),reverse=True)
-		# print sorted_finalScores
+		sorted_finalScores = sorted(finalScores.items(), key=operator.itemgetter(1),reverse=True)[:m]
+		print sorted_finalScores
+		sorted_finalScores = sorted(sorted_finalScores, key=operator.itemgetter(0),reverse=False)
+		print sorted_finalScores
+		print "summary!! "
+		for i in range(0,len(sorted_finalScores)):
+			print finaldata[sorted_finalScores[i][0]]
 
-		# for (i,j) in sorted_finalScores:
-		# 	print finaldata[i]
 
 
-def textRankMain(input_data,n):
+def textRankMain(input_file,n,m):
 	global countWords,data,finaldata
 	graph=Graph()
-	data,finaldata,countWords=readData(input_data,'english')
-	# print countWords
+	data,finaldata,countWords=readData(input_file,'english')
 	graph.set_structure(data)
 	graph.textRank()
 	answer=graph.sort_nodes_textrank(n)
-	result=[]
-	for i in range(0,len(answer)):
-		result.append(answer[i].name)
+	graph.summarize(m)
 
-	return result
-	# graph.summarize()
-	
-# textRankMain(int(sys.argv[1]))
+input_file="/home/nlp/project/englishdata/reuters3.txt"
+textRankMain(input_file,int(sys.argv[1]),int(sys.argv[2]))
