@@ -88,10 +88,10 @@ class Graph:
 		global final_list,sorted_x
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:m]
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
-		print 
-		print "Summary!!"
-		for each in sorted_x:
-			print each.name
+		# print 
+		# print "Summary!!"
+		# for each in sorted_x:
+		# 	print each.name
 		
 
 	def textRank(self):
@@ -123,7 +123,7 @@ class Graph:
 					return
 
 
-
+#m - number of sentences needed
 def textRankMain(input_file,m):
 	global countWords,data,finaldata
 	graph=Graph()
@@ -133,5 +133,5 @@ def textRankMain(input_file,m):
 	graph.textRank()
 	graph.sort_nodes_textrank(m)
 
-input_file="/home/saurbh/nlp/project/englishdata/reuters3.txt"
-textRankMain(input_file,int(sys.argv[1]))
+# input_file="/home/saurbh/nlp/project/englishdata/reuters3.txt"
+# textRankMain(input_file,int(sys.argv[1]))

@@ -136,15 +136,15 @@ class Graph:
 					sum_keywords+=word.PRscore
 			finalScores[i]=pd*sum_keywords
 		sorted_finalScores = sorted(finalScores.items(), key=operator.itemgetter(1),reverse=True)[:m]
-		print sorted_finalScores
+		# print sorted_finalScores
 		sorted_finalScores = sorted(sorted_finalScores, key=operator.itemgetter(0),reverse=False)
-		print sorted_finalScores
-		print "summary!! "
-		for i in range(0,len(sorted_finalScores)):
-			print finaldata[sorted_finalScores[i][0]]
+		# print sorted_finalScores
+		# print "summary!! "
+		# for i in range(0,len(sorted_finalScores)):
+		# 	print finaldata[sorted_finalScores[i][0]]
 
 
-
+#n - number of nodes; m - number of sentences needed
 def textRankMain(input_file,n,m):
 	global countWords,data,finaldata
 	graph=Graph()
@@ -154,5 +154,5 @@ def textRankMain(input_file,n,m):
 	answer=graph.sort_nodes_textrank(n)
 	graph.summarize(m)
 
-input_file="/home/nlp/project/englishdata/reuters3.txt"
-textRankMain(input_file,int(sys.argv[1]),int(sys.argv[2]))
+# input_file="/home/nlp/project/englishdata/reuters3.txt"
+# textRankMain(input_file,int(sys.argv[1]),int(sys.argv[2]))
