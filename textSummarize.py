@@ -84,17 +84,18 @@ class Graph:
 					structure[curr_node][next_node]=self.similarity(sentence,wordlist[j])
 
 
-	def sort_nodes_textrank(self,m):
+	def sort_nodes_textsummarize(self,m):
 		global final_list,sorted_x
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:m]
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
 		# print 
-		# print "Summary!!"
-		# for each in sorted_x:
-		# 	print each.name
+		result=""
+		for each in sorted_x:
+			result+=each.name
+		return result
 		
 
-	def textRank(self):
+	def textSummarize(self):
 		for k in range(10000):
 			prev_PRscore={}
 			for p in self.structure:
@@ -124,14 +125,14 @@ class Graph:
 
 
 #m - number of sentences needed
-def textRankMain(input_file,m):
+def textSummarizeMain(input_file,m):
 	global countWords,data,finaldata
 	graph=Graph()
 	data,finaldata,countWords=readData(input_file,'english')
 	countWords=len(finaldata)
 	graph.set_structure(finaldata)
-	graph.textRank()
-	graph.sort_nodes_textrank(m)
+	graph.textSummarize()
+	return graph.sort_nodes_textsummarize(m)
 
 # input_file="/home/saurbh/nlp/project/englishdata/reuters3.txt"
-# textRankMain(input_file,int(sys.argv[1]))
+# textSummarizeMain(input_file,int(sys.argv[1]))
