@@ -145,7 +145,7 @@ class Graph:
 				delta=0
 				for key in self.structure:
 					delta+=abs(prev_PRscore[key] - key.PRscore)
-				if delta==min_delta:
+				if delta <= min_delta:
 					return
 
 

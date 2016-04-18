@@ -154,7 +154,7 @@ class Graph:
 				delta=0
 				for key in self.structure:
 					delta+=abs(prev_PRscore[key] - key.PRscore)
-				if delta==min_delta:
+				if delta <= min_delta:
 					return
 
 	def summarize(self,m):
@@ -182,7 +182,10 @@ class Graph:
 
 		#print len(sorted_finalScores)
 		for i in range(len(sorted_finalScores)):
-			result+=finaldata[sorted_finalScores[i][0]]
+			try:
+				result+=finaldata[sorted_finalScores[i][0]]
+			except:
+				return result
 		return result
 
 
