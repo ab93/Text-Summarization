@@ -90,8 +90,8 @@ class Graph:
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
 		# print 
 		result=""
-		for each in sorted_x:
-			result+=each.name
+		for i in range(1,len(sorted_x)):
+			result+=sorted_x[i].name
 		return result
 		
 
@@ -128,7 +128,7 @@ class Graph:
 def textSummarizeMain(input_file,m):
 	global countWords,data,finaldata
 	graph=Graph()
-	data,finaldata,countWords=readData(input_file,'english')
+	data,finaldata,countWords=readData(input_file)
 	countWords=len(finaldata)
 	graph.set_structure(finaldata)
 	graph.textSummarize()

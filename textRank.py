@@ -138,7 +138,8 @@ class Graph:
 		sorted_finalScores = sorted(finalScores.items(), key=operator.itemgetter(1),reverse=True)[:m]
 		sorted_finalScores = sorted(sorted_finalScores, key=operator.itemgetter(0),reverse=False)
 		result=""
-		for i in range(0,len(sorted_finalScores)):
+		print len(sorted_finalScores)
+		for i in range(1,len(sorted_finalScores)):
 			result+=finaldata[sorted_finalScores[i][0]]
 		return result
 
@@ -147,7 +148,7 @@ class Graph:
 def textRankMain(input_file,n,m):
 	global countWords,data,finaldata
 	graph=Graph()
-	data,finaldata,countWords=readData(input_file,'english')
+	data,finaldata,countWords=readData(input_file)
 	graph.set_structure(data)
 	graph.textRank()
 	graph.sort_nodes_textrank(n)

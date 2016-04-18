@@ -1,29 +1,35 @@
 import textRank
 import math
 import textSummarize
-keywords_list=[None]*1000
-headlines=[None]*1000
-content=[None]*1000
-length=[None]*1000
-for i in range(0,1000):
+content=[None]*322
+length=[0]*322
+for i in range(0,322):
 	try:
-		f=open('englishdata/reuters'+str(i)+'.txt','r')
-		headlines[i]=f.readline().split(" ")
+		f=open('spanishdata/2010-2013/2010-13c'+str(i)+'.txt','r')
+		f.readline()
 		content[i]=f.readline()
 		length[i]=len(content[i])
 		f.close()
 	except:
-		headlines[i]=None
+		print "came into except"
 		content[i]=None
 		length[i]=None
 
-for i in range(0,1):
+for i in range(0,322):
 	n=int(math.ceil(min(0.1*length[i],7*math.log(length[i]))))
-	fp.write(str(n)+"\n")
 	try:
-		reference=textSummarize.textSummarizeMain('englishdata/reuters'+str(i)+'.txt',5)
-		candidate=textRank.textRankMain('englishdata/reuters'+str(i)+'.txt',n,5)
-
+		reference=textSummarize.textSummarizeMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',10)
+		print "reference done"
+		candidate=textRank.textRankMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',n,10)
+		print "candidate done"
+		f1=open('newdata/reference/2010-13c'+str(i)+'.txt','w')
+		f2=open('newdata/candidate/2010-13c'+str(i)+'.txt','w')
+		f1.write(reference)
+		f2.write(candidate)
+		f1.close()
+		f2.close()
+	except:
+		pass
 
 # count=0
 # for i in range(0,1000):
