@@ -30,5 +30,5 @@ We aim to further experiment with different parameters of the algorithm. They ar
 
 <h2> Evaluation </h2>
 <p align="justify">
-Since our data doesn't contain human annoted summaries, we have implemented the standard TextRank algorithm for reference. We compare our output with the reference output using ROGUE software. For the headline generation task, we have 322 instances of text with headlines to compare with.
+Since our data doesn't contain human annoted summaries, we have implemented the standard TextRank algorithm for reference. We compare our output with the reference output using ROUGE software. For the headline generation task, we have 322 instances of text with headlines to compare with.
 </p>
