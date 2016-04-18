@@ -13,7 +13,7 @@ class Node:
 	Represents a node of a graph.
 
 	Member Variables are:
-	name: text of the word; 
+	name: text of the word;
 	position: position of the word in the document;
 	PRscore: PageRank score for the word;
 	position_dist: position based probability distribution value
@@ -66,7 +66,7 @@ class Graph:
 		Calculates Arc Sine probability distribution
 		'''
 		return 1.0/(math.pi*math.sqrt(position*(1-position)))
-	
+
 
 	def setNode(self,word,count):
 		if word in self.nodeHash:
@@ -81,7 +81,7 @@ class Graph:
 	def set_structure(self,wordlist):
 		'''
 		Argument: List of words in the document
-		
+
 		Creates nodes of words and edges between the nodes based on window size
 		'''
 		count=0
@@ -124,12 +124,13 @@ class Graph:
 
 	def textRank(self, max_iter=10000, min_delta=0):
 		'''
-		Argument: Maximum number of iterations (default 10000), minimum difference in PR score between 
+		Argument: Maximum number of iterations (default 10000), minimum difference in PR score between
 		consecutive iterations (default 0)
 
 		Implements the main TextRank algorithm. Calculates the PR score per node till convergence
 		'''
 		for k in range(max_iter):
+			#print k
 			prev_PRscore={}
 			for p in self.structure:
 				if p not in prev_PRscore:
@@ -163,7 +164,7 @@ class Graph:
 		Returns: Summary (String)
 
 		Calculates sentence scores based on the keywords and positional distribution of the sentence.
-		Sorts based on sentence score. It picks the top m sentences, and forms the summary based on 
+		Sorts based on sentence score. It picks the top m sentences, and forms the summary based on
 		the positional order.
 		'''
 		finalScores={}
@@ -179,7 +180,7 @@ class Graph:
 		sorted_finalScores = sorted(sorted_finalScores, key=operator.itemgetter(0),reverse=False)
 		result=""
 
-		print len(sorted_finalScores)
+		#print len(sorted_finalScores)
 		for i in range(len(sorted_finalScores)):
 			result+=finaldata[sorted_finalScores[i][0]]
 		return result
@@ -198,4 +199,3 @@ def textRankMain(input_file,n,m):
 
 	print "Finished TextRank v2.0"
 	return graph.summarize(m)
-

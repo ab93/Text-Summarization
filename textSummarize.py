@@ -15,7 +15,7 @@ class Node:
 	Represents a node of a graph.
 
 	Member Variables are:
-	name: text of the sentence; 
+	name: text of the sentence;
 	position: position of the sentence in the document;
 	PRscore: PageRank score for the sentence;
 	'''
@@ -24,7 +24,7 @@ class Node:
 		self.name=name
 		self.position=count
 		self.PRscore=0
-		
+
 
 	def __repr__(self):
 		return self.name
@@ -52,7 +52,7 @@ class Graph:
 	def printStructure(self):
 		for key in self.structure:
 			print key.name,key.PRscore
-	
+
 	def similarity(self,si,sj):
 		'''
 		Arguments: 2 sentences
@@ -79,12 +79,12 @@ class Graph:
 		'''
 		count=0
 		structure=self.structure
-		window=self.window
 		for sentence in wordlist:
 			count+=1
 			curr_node=self.setNode(sentence,count)
 			for j in range(len(wordlist)):
 				next_node=self.setNode(wordlist[j],j+1)
+				#print next_node, curr_node
 				if(next_node == curr_node):
 					continue
 				if curr_node not in structure:
@@ -92,6 +92,7 @@ class Graph:
 					structure[curr_node][next_node]=self.similarity(sentence,wordlist[j])
 				else:
 					structure[curr_node][next_node]=self.similarity(sentence,wordlist[j])
+		#print self.structure
 
 
 	def sort_nodes_textsummarize(self,m):
@@ -103,21 +104,24 @@ class Graph:
 		global final_list,sorted_x
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:m]
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
-		# print 
+		# print
 		result=""
 		for i in range(1,len(sorted_x)):
 			result+=sorted_x[i].name
+
+		#print result
 		return result
-		
+
 
 	def textSummarize(self, max_iter=10000, min_delta=0):
 		'''
-		Argument: Maximum number of iterations (default 10000), minimum difference in PR score between 
+		Argument: Maximum number of iterations (default 10000), minimum difference in PR score between
 		consecutive iterations (default 0)
 
 		Implements the main TextRank algorithm for sentence extraction. Calculates the PR score per node till convergence
 		'''
 		for k in range(max_iter):
+			#print k
 			prev_PRscore={}
 			for p in self.structure:
 				if p not in prev_PRscore:
@@ -158,5 +162,3 @@ def textSummarizeMain(input_file,m):
 
 	print "Finished TextRank."
 	return graph.sort_nodes_textsummarize(m)
-
-
