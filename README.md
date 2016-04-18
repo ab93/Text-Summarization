@@ -22,7 +22,7 @@ The corpus is a transcript of speeches by two Colombian presidents which has bee
 <p align="justify">
 The main tasks that our proposed project entails are text
 summarization and headline generation. We have achieved
-text summarization with our modification on the Text Rank algorithm that performs keyword extraction.
+text summarization with our modification on the Text Rank algorithm[1] that performs keyword extraction.
 The modification is done based on the intuition that the sentences occuring in the beginning and the end of the text encode more important information about the text or article. We have used an arcsine probability density function that reflects this intuition. This distribution enables us to introduce weights on the textRank graph. Once the top 'n' keywords are extracted, the sentences are scored based on the probability density function with respect to the postion of the sentence and number of keywords present in the sentence. The top 'm' sentences are considered important and are used for the text summarization task.
 
 <br/>
@@ -42,3 +42,6 @@ We aim to further experiment with different parameters of the algorithm. They ar
 <p align="justify">
 Since our data doesn't contain human annoted summaries, we have implemented the standard TextRank algorithm for reference. We compare our output with the reference output using ROUGE software. For the headline generation task, we have 322 instances of text with headlines to compare with.
 </p>
+
+<h2> References </h2>
+[1] R. Mihalcea and P. Tarau. Textrank: Bringing order into texts. Association for Computational Linguistics, 2004
