@@ -4,12 +4,20 @@ from preprocess import readData
 import operator
 import sys
 
-min_delta=0
 data=[]
 final_list=[]
 finaldata=[]
 
 class Node:
+	'''
+	Represents a node of a graph.
+
+	Member Variables are:
+	name: text of the word; 
+	position: position of the word in the document;
+	PRscore: PageRank score for the word;
+	position_dist: position based probability distribution value
+	'''
 	def __init__(self,name,count,p_dist):
 		self.name=name
 		self.position=count
@@ -28,15 +36,18 @@ class Node:
 
 
 class Graph:
+	'''
+	Represents a document as a Graph.
+
+	Member variables are:
+	structure: A dictionary consisting of the mapping of nodes and edges;
+	window: A value that defines the co-occurance relation between the nodes;
+	nodeHash: Dictionary of node references;
+	'''
 	def __init__(self):
 		self.structure={}
-		self.threshold=0
 		self.window=2
-		self.nodeList=[]
 		self.nodeHash = {}
-
-	def set_threshold(self,thresh):
-		self.threshold=thresh
 
 	def set_window(self,win):
 		self.window=win
@@ -51,6 +62,9 @@ class Graph:
 		return False
 
 	def pd_calculator(self,position):
+		'''
+		Calculates Arc Sine probability distribution
+		'''
 		return 1.0/(math.pi*math.sqrt(position*(1-position)))
 	
 
@@ -65,6 +79,11 @@ class Graph:
 		return node
 
 	def set_structure(self,wordlist):
+		'''
+		Argument: List of words in the document
+		
+		Creates nodes of words and edges between the nodes based on window size
+		'''
 		count=0
 		structure=self.structure
 		window=self.window
@@ -92,14 +111,25 @@ class Graph:
 
 
 	def sort_nodes_textrank(self,n):
+		'''
+		Argument: number of keywords to extract
+
+		Sorts the nodes based on pr score and picks the top n nodes
+		'''
 		global final_list
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:n]
 		position_sorted=sorted(final_list)
-		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
-		return sorted_x
+		#sorted_x = sorted(final_list, key=operator.attrgetter('position'))
 
-	def textRank(self):
-		for k in range(10000):
+
+	def textRank(self, max_iter=10000, min_delta=0):
+		'''
+		Argument: Maximum number of iterations (default 10000), minimum difference in PR score between 
+		consecutive iterations (default 0)
+
+		Implements the main TextRank algorithm. Calculates the PR score per node till convergence
+		'''
+		for k in range(max_iter):
 			prev_PRscore={}
 			for p in self.structure:
 				if p not in prev_PRscore:
@@ -127,7 +157,17 @@ class Graph:
 					return
 
 	def summarize(self,m):
+		'''
+		Arguments: Number of sentences summary should have
+
+		Returns: Summary (String)
+
+		Calculates sentence scores based on the keywords and positional distribution of the sentence.
+		Sorts based on sentence score. It picks the top m sentences, and forms the summary based on 
+		the positional order.
+		'''
 		finalScores={}
+
 		for i in range(0,len(data)):
 			pd=self.pd_calculator((i+1)/float(len(data)+1))
 			sum_keywords=0
@@ -138,22 +178,24 @@ class Graph:
 		sorted_finalScores = sorted(finalScores.items(), key=operator.itemgetter(1),reverse=True)[:m]
 		sorted_finalScores = sorted(sorted_finalScores, key=operator.itemgetter(0),reverse=False)
 		result=""
+
 		print len(sorted_finalScores)
-		for i in range(1,len(sorted_finalScores)):
+		for i in range(len(sorted_finalScores)):
 			result+=finaldata[sorted_finalScores[i][0]]
 		return result
 
 
-#n - number of nodes; m - number of sentences needed
 def textRankMain(input_file,n,m):
 	global countWords,data,finaldata
+
+	print "Running TextRank v2.0 on", input_file,"...."
+
 	graph=Graph()
 	data,finaldata,countWords=readData(input_file)
 	graph.set_structure(data)
 	graph.textRank()
 	graph.sort_nodes_textrank(n)
+
+	print "Finished TextRank v2.0"
 	return graph.summarize(m)
 
-
-# input_file="/home/nlp/project/englishdata/reuters3.txt"
-# textRankMain(input_file,int(sys.argv[1]),int(sys.argv[2]))

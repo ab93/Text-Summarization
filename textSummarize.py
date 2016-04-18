@@ -4,13 +4,22 @@ from preprocess import readData
 import operator
 import sys
 
-min_delta=0
+
 data=[]
 final_list=[]
 finaldata=[]
 sorted_x=[]
 
 class Node:
+	'''
+	Represents a node of a graph.
+
+	Member Variables are:
+	name: text of the sentence; 
+	position: position of the sentence in the document;
+	PRscore: PageRank score for the sentence;
+	'''
+
 	def __init__(self,name,count):
 		self.name=name
 		self.position=count
@@ -29,31 +38,28 @@ class Node:
 
 
 class Graph:
+	'''
+	Represents a document as a Graph.
+
+	Member variables are:
+	structure: A dictionary consisting of the mapping of nodes and edges;
+	nodeHash: Dictionary of node references;
+	'''
 	def __init__(self):
 		self.structure={}
-		self.threshold=0
-		self.window=2
-		self.nodeList=[]
 		self.nodeHash = {}
-
-	def set_threshold(self,thresh):
-		self.threshold=thresh
-
-	def set_window(self,win):
-		self.window=win
 
 	def printStructure(self):
 		for key in self.structure:
 			print key.name,key.PRscore
-
-	def find(self,curr_node):
-		for obj in self.structure:
-			if obj==curr_node:
-				return True
-		return False
-
 	
 	def similarity(self,si,sj):
+		'''
+		Arguments: 2 sentences
+		Returns: Similarity score value
+
+		Compute similarity score between 2 sentences
+		'''
 		si1=set(si)
 		sj1=set(sj)
 		return len(si1.intersection(sj1))/(math.log(len(si))+math.log(len(sj)))
@@ -67,6 +73,10 @@ class Graph:
 		return node
 
 	def set_structure(self,wordlist):
+		'''
+		Argument: List of sentences in the document
+		creates nodes of sentences and edges between the nodes based on similarity
+		'''
 		count=0
 		structure=self.structure
 		window=self.window
@@ -85,6 +95,11 @@ class Graph:
 
 
 	def sort_nodes_textsummarize(self,m):
+		'''
+		Argument: number of sentences to extract
+
+		Sorts the nodes based on pr score and picks the top m nodes
+		'''
 		global final_list,sorted_x
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:m]
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
@@ -95,8 +110,14 @@ class Graph:
 		return result
 		
 
-	def textSummarize(self):
-		for k in range(10000):
+	def textSummarize(self, max_iter=10000, min_delta=0):
+		'''
+		Argument: Maximum number of iterations (default 10000), minimum difference in PR score between 
+		consecutive iterations (default 0)
+
+		Implements the main TextRank algorithm for sentence extraction. Calculates the PR score per node till convergence
+		'''
+		for k in range(max_iter):
 			prev_PRscore={}
 			for p in self.structure:
 				if p not in prev_PRscore:
@@ -124,15 +145,18 @@ class Graph:
 					return
 
 
-#m - number of sentences needed
 def textSummarizeMain(input_file,m):
 	global countWords,data,finaldata
+
+	print "Running default TextRank on", input_file,"...."
+
 	graph=Graph()
 	data,finaldata,countWords=readData(input_file)
 	countWords=len(finaldata)
 	graph.set_structure(finaldata)
 	graph.textSummarize()
+
+	print "Finished TextRank."
 	return graph.sort_nodes_textsummarize(m)
 
-# input_file="/home/saurbh/nlp/project/englishdata/reuters3.txt"
-# textSummarizeMain(input_file,int(sys.argv[1]))
+
