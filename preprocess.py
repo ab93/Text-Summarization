@@ -5,11 +5,17 @@ from nltk.corpus import stopwords
 
 def readData(filename,lang='spanish'):
 	'''
-	Return the [ s1[w1,w2,w3..], s2[w1,w2,w3..] ...], unfiltered sentence list
+	Arguments: Name of file, language (default: Spanish)
+
+	Returns: List of List of sentence words, unfiltered sentence list and
+	length of doc
+
+	Returns the [ s1[w1,w2,w3..], s2[w1,w2,w3..] ...], [s1,s2,...]
 	and length of doc.
 	'''
+
 	sentWordList = []
-	sentList = []     #Unfiltered sentence list
+	sentList = []    
 	lenDoc = 0
 	with open(filename,'r') as fp:
 		for line in fp:
@@ -20,6 +26,16 @@ def readData(filename,lang='spanish'):
 
 
 def cleanLine(line,finalList,sentList,lenDoc,lang):
+	'''
+	Arguments: each line, existing sentence word list, existing unfiltered sentence
+	list, length of the document and language.
+
+	Returns: appended sentence word list, appended unfiltered sentence list, and
+	length of the document seen so far.
+
+	Performs preprocessing task. Removes stopwords, punctuations and numeric values
+	'''
+
 	try:
 		tokenizer = nltk.data.load('tokenizers/punkt/'+ lang + '.pickle')
 	except:
@@ -45,7 +61,3 @@ def cleanLine(line,finalList,sentList,lenDoc,lang):
 		lenDoc += len(words)
 
 	return finalList, sentList, lenDoc
-
-
-# readData('data/data/2010-2013/2010-13c0.txt')
-#readData('englishdata/reuters0.txt','english')
