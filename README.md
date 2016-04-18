@@ -23,8 +23,16 @@ The corpus is a transcript of speeches by two Colombian presidents which has bee
 The main tasks that our proposed project entails are text
 summarization and headline generation. We have achieved
 text summarization with our modification on the Text Rank algorithm that performs keyword extraction.
-The modification is done based on the intuition that the sentences occuring in the beginning and the end of the text encode more important information about the text or article. We have used an arcsine probability density function that reflects this intuition. This distribution enables us to introduce weights on the textRank graph. Once the top 'n' keywords are extracted, the sentences are scored based on the probability density function with respect to the postion of the sentence and number of keywords present in the sentence. The top 'm' sentences are considered important and are used for the text summarization task. 
-
+The modification is done based on the intuition that the sentences occuring in the beginning and the end of the text encode more important information about the text or article. We have used an arcsine probability density function that reflects this intuition. This distribution enables us to introduce weights on the textRank graph. Once the top 'n' keywords are extracted, the sentences are scored based on the probability density function with respect to the postion of the sentence and number of keywords present in the sentence. The top 'm' sentences are considered important and are used for the text summarization task.
+<br/>
+For running the program, do
+<br/>
+<code>
+python get_summary.py
+</code>
+<br/>
+The summarized texts will be available in the directory summarized_text.
+<br/>
 We aim to further experiment with different parameters of the algorithm. They are the window size and stemming/lemmatization prior to the method. Also, as the final part of the project we aim to generate headlines from the extracted keywords using possibly Recurrant Neural Networks (RNN).
 </p>
 
