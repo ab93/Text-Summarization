@@ -1,6 +1,7 @@
 import textRank
 import math
 import textSummarize
+import sys
 
 content=[None]*322
 length=[0]*322
@@ -20,7 +21,7 @@ def main():
 			content[i]=None
 			length[i]=None
 
-	for i in range(0,322):
+	for i in range(int(sys.argv[1]),int(sys.argv[2])):
 		'''
 		Computes the n value (the number of keywords) that TextRank must compute.
 		This is calculated based on the below formula which was derived expermientally.
