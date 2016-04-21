@@ -20,7 +20,7 @@ def main():
 			content[i]=None
 			length[i]=None
 
-	for i in range(322):
+	for i in range(0,322):
 		'''
 		Computes the n value (the number of keywords) that TextRank must compute.
 		This is calculated based on the below formula which was derived expermientally.
@@ -42,10 +42,21 @@ def main():
 		Using these keywords, the sentences are then extracted using a calculated
 		"sentence score"
 		'''
-		f1=open('summarized_text/reference/2010-13ref'+str(i)+'.txt','w')
-		f2=open('summarized_text/candidate/2010-13can'+str(i)+'.txt','w')
-		f1.write(reference.encode('utf-8'))
-		f2.write(candidate.encode('utf-8'))
+
+		html_model="<html><head><title>model"+str(i)+"</title></head><body>"
+		html_peer="<html><head><title>peer"+str(i)+"</title></head><body>"
+		for j in range(0,len(reference)):
+			reference[j]="<a name='"+str(j)+"'>["+str(j)+"]</a><a href='#"+str(j)+"' id="+str(j)+">"+reference[j]+"</a>"
+			html_model+=reference[j]
+		for k in range(0,len(candidate)):
+			candidate[k]="<a name='"+str(k)+"'>["+str(k)+"]</a><a href='#"+str(k)+"' id="+str(k)+">"+candidate[k]+"</a>"
+			html_peer+=candidate[k]
+		html_model+="</body></html>"
+		html_peer+="</body></html>"
+		f1=open('summarized_text/models/2010-13model-'+str(i)+'.html','w')
+		f2=open('summarized_text/systems/2010-13peer-'+str(i)+'.html','w')
+		f1.write(html_model.encode('utf-8'))
+		f2.write(html_peer.encode('utf-8'))
 		f1.close()
 		f2.close()
 

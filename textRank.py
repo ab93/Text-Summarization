@@ -178,12 +178,12 @@ class Graph:
 			finalScores[i]=pd*sum_keywords
 		sorted_finalScores = sorted(finalScores.items(), key=operator.itemgetter(1),reverse=True)[:m]
 		sorted_finalScores = sorted(sorted_finalScores, key=operator.itemgetter(0),reverse=False)
-		result=""
+		result=[]
 
 		#print len(sorted_finalScores)
 		for i in range(len(sorted_finalScores)):
 			try:
-				result+=finaldata[sorted_finalScores[i][0]]
+				result.append(finaldata[sorted_finalScores[i][0]])
 			except:
 				return result
 		return result

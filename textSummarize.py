@@ -105,9 +105,9 @@ class Graph:
 		final_list = sorted(self.structure.keys(), key=operator.attrgetter('PRscore'),reverse=True)[:m]
 		sorted_x = sorted(final_list, key=operator.attrgetter('position'))
 		# print
-		result=""
+		result=[]
 		for i in range(1,len(sorted_x)):
-			result+=sorted_x[i].name
+			result.append(sorted_x[i].name)
 
 		#print result
 		return result
