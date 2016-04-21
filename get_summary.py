@@ -2,6 +2,7 @@ import textRank
 import math
 import textSummarize
 import sys
+import string
 
 content=[None]*322
 length=[0]*322
@@ -13,8 +14,10 @@ def main():
 		'''
 		try:
 			f=open('spanishdata/2010-2013/2010-13c'+str(i)+'.txt','r')
-			f.readline()
-			content[i]=f.readline()
+			content[i]=f.read()
+			content[i]=content[i].replace("\n"," ")
+			content[i]=content[i].split(" ")
+			content[i]=[x for x in content[i] if x]
 			length[i]=len(content[i])
 			f.close()
 		except:
