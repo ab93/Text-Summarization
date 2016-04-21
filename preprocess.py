@@ -15,7 +15,7 @@ def readData(filename,lang='spanish'):
 	'''
 
 	sentWordList = []
-	sentList = []    
+	sentList = []
 	lenDoc = 0
 	with open(filename,'r') as fp:
 		for line in fp:
@@ -48,6 +48,9 @@ def cleanLine(line,finalList,sentList,lenDoc,lang):
 
 	line = line.decode('utf-8').lower()
 	notNum = re.compile(r'[0-9]+')
+	decimal = re.compile(r'\d+.\d+')
+
+	line = decimal.sub('',line)
 	line = notNum.sub('',line)
 	words = line.split(' ')
 	impWords = filter(lambda x: x not in stopwords.words(lang), words)
