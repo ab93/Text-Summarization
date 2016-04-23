@@ -1,4 +1,4 @@
-import pprint
+
 import math
 from preprocess import readData
 import operator
@@ -51,7 +51,7 @@ class Graph:
 
 	def printStructure(self):
 		for key in self.structure:
-			print key.name,key.PRscore
+			print key.name.encode('utf-8'),key.PRscore
 
 	def similarity(self,si,sj):
 		'''
@@ -90,9 +90,14 @@ class Graph:
 				if curr_node not in structure:
 					structure[curr_node]={}
 					structure[curr_node][next_node]=self.similarity(sentence,wordlist[j])
+					#print self.similarity(sentence,wordlist[j])
 				else:
 					structure[curr_node][next_node]=self.similarity(sentence,wordlist[j])
-		#print self.structure
+				# 	print self.similarity(sentence,wordlist[j])
+				# raw_input()
+		for key in self.structure:
+			for value in self.structure[key]:
+				print key.name.encode('utf-8'),value.name.encode('utf-8'),self.structure[key][value]
 
 
 	def sort_nodes_textsummarize(self,m):
@@ -121,7 +126,7 @@ class Graph:
 		Implements the main TextRank algorithm for sentence extraction. Calculates the PR score per node till convergence
 		'''
 		for k in range(max_iter):
-			#print k
+			print k
 			prev_PRscore={}
 			for p in self.structure:
 				if p not in prev_PRscore:
@@ -139,6 +144,7 @@ class Graph:
 				for q in incomingEdges:
 					weightTot=0
 					for r in self.structure[q]:
+						#print r.name.encode('utf-8')
 						weightTot+=self.structure[q][r]
 					innerScore += (self.structure[q][p]*q.PRscore)/weightTot
 				p.PRscore=0.15+(0.85*(innerScore))
@@ -156,9 +162,11 @@ def textSummarizeMain(input_file,m):
 
 	graph=Graph()
 	data,finaldata,countWords=readData(input_file)
+	# print finaldata
+	# print countWords
+	# raw_input()
 	countWords=len(finaldata)
 	graph.set_structure(finaldata)
 	graph.textSummarize()
-
 	print "Finished TextRank."
 	return graph.sort_nodes_textsummarize(m)
