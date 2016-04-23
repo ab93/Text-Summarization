@@ -36,14 +36,14 @@ def main():
 		The reference summary is obtained using the vanilla TextRank algorithm
 		proposed by Prof. Rada Mihalcea of Univ of Michigan
 		'''
-		#reference=textSummarize.textSummarizeMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',10)
+		reference=textSummarize.textSummarizeMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',10)
 		reference1=api.klReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
 		reference2=api.lexrankReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
 		reference3=api.lsaReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
 		reference4=api.luhnReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
 		reference5=api.sumbasicReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
 		reference6=api.textrankReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
-		#candidate=textRank.textRankMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',n,10)
+		candidate=textRank.textRankMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',n,10)
 		
 
 		'''
