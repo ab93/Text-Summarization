@@ -95,9 +95,9 @@ class Graph:
 					structure[curr_node][next_node]=self.similarity(sentence,wordlist[j])
 				# 	print self.similarity(sentence,wordlist[j])
 				# raw_input()
-		for key in self.structure:
-			for value in self.structure[key]:
-				print key.name.encode('utf-8'),value.name.encode('utf-8'),self.structure[key][value]
+		# for key in self.structure:
+		# 	for value in self.structure[key]:
+		# 		print key.name.encode('utf-8'),value.name.encode('utf-8'),self.structure[key][value]
 
 
 	def sort_nodes_textsummarize(self,m):
@@ -126,7 +126,7 @@ class Graph:
 		Implements the main TextRank algorithm for sentence extraction. Calculates the PR score per node till convergence
 		'''
 		for k in range(max_iter):
-			print k
+			#print k
 			prev_PRscore={}
 			for p in self.structure:
 				if p not in prev_PRscore:

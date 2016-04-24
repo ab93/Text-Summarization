@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 from sumy.parsers.plaintext import PlaintextParser
@@ -30,7 +32,7 @@ def klReferenceSummary(path):
 	
 
 	for sentence in summarizer(parser.document, SENTENCES_COUNT):
-		print(sentence._text)
+		#print(sentence._text)
 		sentencesList.append(sentence._text)
 
 	return sentencesList
@@ -44,7 +46,7 @@ def lexrankReferenceSummary(path):
 	
 
 	for sentence in summarizer(parser.document, SENTENCES_COUNT):
-		print(sentence._text)
+		#print(sentence._text)
 		sentencesList.append(sentence._text)
 
 	return sentencesList
@@ -58,7 +60,7 @@ def lsaReferenceSummary(path):
 	
 
 	for sentence in summarizer(parser.document, SENTENCES_COUNT):
-		print(sentence._text)
+		#print(sentence._text)
 		sentencesList.append(sentence._text)
 
 	return sentencesList
@@ -72,7 +74,7 @@ def luhnReferenceSummary(path):
 	
 
 	for sentence in summarizer(parser.document, SENTENCES_COUNT):
-		print(sentence._text)
+		#print(sentence._text)
 		sentencesList.append(sentence._text)
 
 	return sentencesList
@@ -86,7 +88,7 @@ def sumbasicReferenceSummary(path):
 	
 
 	for sentence in summarizer(parser.document, SENTENCES_COUNT):
-		print(sentence._text)
+		#print(sentence._text)
 		sentencesList.append(sentence._text)
 
 	return sentencesList
@@ -100,7 +102,7 @@ def textrankReferenceSummary(path):
 	
 
 	for sentence in summarizer(parser.document, SENTENCES_COUNT):
-		print(sentence._text)
+		#print(sentence._text)
 		sentencesList.append(sentence._text)
 
 	return sentencesList
