@@ -2,6 +2,7 @@ import re
 import os
 import nltk.data
 from nltk.corpus import stopwords
+from nltk.stem import SnowballStemmer
 
 def readData(filename,lang='spanish'):
 	'''
@@ -50,12 +51,15 @@ def cleanLine(line,finalList,sentList,lenDoc,lang):
 	notNum = re.compile(r'[0-9]+')
 	decimal = re.compile(r'\d+.\d+')
 
+	stemmer = SnowballStemmer('spanish')
+
 	line = decimal.sub('',line)
 	line = notNum.sub('',line)
 	words = line.split(' ')
 	impWords = filter(lambda x: x not in stopwords.words(lang), words)
-	line = ' '.join(impWords)
+	stemmedWords = [stemmer.stem(word) for word in impWords]
 
+	line = ' '.join(stemmedWords)
 	sentWordList = tokenizer.tokenize(line)
 
 	for sent in sentWordList:
