@@ -6,12 +6,15 @@ import string
 import api
 import evalSummary
 import csv
+from rouge import Rouge_n, writeRougeScore
+
 csv_file = open('result.csv', 'w+')
 writerCsv = csv.writer(csv_file)
 
 content=[None]*322
 length=[0]*322
 weights = [0.25, 0.25, 0.25, 0.25]
+
 
 def main():
 	for i in range(322):
@@ -30,6 +33,8 @@ def main():
 			content[i]=None
 			length[i]=None
 
+	Rouge_fp = open('Rouge_eval.txt','w+')
+
 	for i in range(int(sys.argv[1]),int(sys.argv[2])):
 		'''
 		Computes the n value (the number of keywords) that TextRank must compute.
@@ -41,49 +46,77 @@ def main():
 		The reference summary is obtained using the vanilla TextRank algorithm
 		proposed by Prof. Rada Mihalcea of Univ of Michigan
 		'''
-		reference0List=[]
-		reference1List=[]
-		reference2List=[]
-		reference3List=[]
-		reference4List=[]
-		reference5List=[]
-		candidateList=[]
-		reference0=textSummarize.textSummarizeMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',10)
-		reference1=api.klReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
-		reference2=api.lexrankReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
-		reference3=api.lsaReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
-		reference4=api.sumbasicReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
-		reference5=api.textrankReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
-		candidate=textRank.textRankMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',n,10)
-		for indexValue in range(len(reference0)):
-			for j in reference0[indexValue].split():
-				reference0List.append(j)
+		#reference_0List=[]
+		#reference_1List=[]
+		#reference_2List=[]
+		#reference_3List=[]
+		#reference_4List=[]
+		#reference_5List=[]
+		#candidateList=[]
+		#reference_0=textSummarize.textSummarizeMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',10)
+		#reference_1=api.klReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
+		#reference_2=api.lexrankReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
+		#reference_3=api.lsaReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
+		#reference_4=api.sumbasicReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
+		#reference_5=api.textrankReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
 
-			for j in reference1[indexValue].split():
-				reference1List.append(j)
+		references = api.klReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt')
+		references.extend(api.lexrankReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt'))
+		references.extend(api.lsaReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt'))
+		references.extend(api.sumbasicReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt'))
+		references.extend(api.textrankReferenceSummary('spanishdata/2010-2013/2010-13c'+str(i)+'.txt'))
 
-			for j in reference2[indexValue].split():
-				reference2List.append(j)
+		candidate_1 = textRank.textRankMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',n,10)
+		candidate_2 = textSummarize.textSummarizeMain('spanishdata/2010-2013/2010-13c'+str(i)+'.txt',10)
 
-			for j in reference3[indexValue].split():
-				reference3List.append(j)
+		candidate_1 = ' '.join(candidate_1)
+		candidate_2 = ' '.join(candidate_2)
+		references = ' '.join(references)
 
-			for j in reference4[indexValue].split():
-				reference4List.append(j)
+		Rouge_score_1 = Rouge_n(candidate_1,references)
+		Rouge_score_2 = Rouge_n(candidate_2,references)
+		change = ((Rouge_score_1 - Rouge_score_2)/Rouge_score_2) * 100.0
 
-			for j in reference5[indexValue].split():
-				reference5List.append(j)
+		change = "%.3f" % change
+		Rouge_score_2="%.4f"%Rouge_score_2
+		Rouge_score_1="%.4f"%Rouge_score_1
+		print "Rouge score of Text Rank v2.0:",Rouge_score_1
+		print "Rouge score of Original Text Rank:",Rouge_score_2
+		print "Percentage increase:",change
+
+		writeRougeScore(i,Rouge_score_1,Rouge_score_2,change,Rouge_fp)
+
+
+		'''
+		or indexValue in range(len(reference_0)):
+			for j in reference_0[indexValue].split():
+				reference_0List.append(j)
+
+			for j in reference_1[indexValue].split():
+				reference_1List.append(j)
+
+			for j in reference_2[indexValue].split():
+				reference_2List.append(j)
+
+			for j in reference_3[indexValue].split():
+				reference_3List.append(j)
+
+			for j in reference_4[indexValue].split():
+				reference_4List.append(j)
+
+			for j in reference_5[indexValue].split():
+				reference_5List.append(j)
 
 			for j in candidate[indexValue].split():
 				candidateList.append(j)
-			
-			
-		#print reference1List
-		result=evalSummary.BLEU.compute(candidateList, [reference0List,reference1List,reference2List,reference3List,reference4List,reference5List], weights)
-		result1=evalSummary.BLEU.compute(reference0List, [reference1List,reference2List,reference3List,reference4List,reference5List], weights)
-		writerCsv.writerow((i,result,result1,((result-result1)/result1)*100))
-		print result,result1,((result-result1)/result1)*100
-		
+		'''
+
+		#print reference_1List
+		#result=evalSummary.BLEU.compute(candidateList, [reference_0List,reference_1List,reference_2List,reference_3List,reference_4List,reference_5List], weights)
+		#result1=evalSummary.BLEU.compute(reference_0List, [reference_1List,reference_2List,reference_3List,reference_4List,reference_5List], weights)
+		#writerCsv.writerow((i,result,result1,((result-result1)/result1)*100))
+		#print result,result1,((result-result1)/result1)*100
+
 
 		'''
 		The candidate summary is obtained using the new flavor of the
@@ -94,22 +127,6 @@ def main():
 		"sentence score"
 		'''
 
-		# html_model="<html><head><title>model"+str(i)+"</title></head><body>"
-		# html_peer="<html><head><title>peer"+str(i)+"</title></head><body>"
-		# for j in range(0,len(reference)):
-		# 	reference[j]="<a name='"+str(j)+"'>["+str(j)+"]</a><a href='#"+str(j)+"' id="+str(j)+">"+reference[j]+"</a>"
-		# 	html_model+=reference[j]
-		# for k in range(0,len(candidate)):
-		# 	candidate[k]="<a name='"+str(k)+"'>["+str(k)+"]</a><a href='#"+str(k)+"' id="+str(k)+">"+candidate[k]+"</a>"
-		# 	html_peer+=candidate[k]
-		# html_model+="</body></html>"
-		# html_peer+="</body></html>"
-		# f1=open('summarized_text/models/2010-13model-'+str(i)+'.html','w')
-		# f2=open('summarized_text/systems/2010-13peer-'+str(i)+'.html','w')
-		# f1.write(html_model.encode('utf-8'))
-		# f2.write(html_peer.encode('utf-8'))
-		# f1.close()
-		# f2.close()
 
 if __name__ == '__main__':
 	main()
