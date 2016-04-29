@@ -8,8 +8,8 @@ import evalSummary
 import csv
 from rouge import Rouge_n, writeRougeScore
 
-csv_file = open('result'+sys.argv[1]+'-'+sys.argv[2]+'.csv', 'w+')
-writerCsv = csv.writer(csv_file)
+Rouge_file = open('result'+sys.argv[1]+'-'+sys.argv[2]+'.txt', 'w+')
+
 
 content=[None]*322
 length=[0]*322
@@ -33,7 +33,7 @@ def main():
 			content[i]=None
 			length[i]=None
 
-	Rouge_fp = open('Rouge_eval.txt','w+')
+	#Rouge_fp = open('Rouge_eval.txt','w+')
 
 	for i in range(int(sys.argv[1]),int(sys.argv[2])):
 		'''
@@ -84,7 +84,7 @@ def main():
 		print "Rouge score of Original Text Rank:",Rouge_score_2
 		print "Percentage increase:",change
 
-		writeRougeScore(i,Rouge_score_1,Rouge_score_2,change,Rouge_fp)
+		writeRougeScore(i,Rouge_score_1,Rouge_score_2,change,Rouge_file)
 
 
 		'''
