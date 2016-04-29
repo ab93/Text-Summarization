@@ -8,7 +8,7 @@ import evalSummary
 import csv
 from rouge import Rouge_n, writeRougeScore
 
-csv_file = open('result.csv', 'w+')
+csv_file = open('result'+sys.argv[1]+'-'+sys.argv[2]+'.csv', 'w+')
 writerCsv = csv.writer(csv_file)
 
 content=[None]*322
