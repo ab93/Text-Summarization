@@ -122,7 +122,7 @@ class Graph:
 		#sorted_x = sorted(final_list, key=operator.attrgetter('position'))
 
 
-	def textRank(self, max_iter=10000, min_delta=0):
+	def textRank(self, max_iter=1000, min_delta=0):
 		'''
 		Argument: Maximum number of iterations (default 10000), minimum difference in PR score between
 		consecutive iterations (default 0)

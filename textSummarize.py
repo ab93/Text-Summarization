@@ -118,7 +118,7 @@ class Graph:
 		return result
 
 
-	def textSummarize(self, max_iter=10000, min_delta=0):
+	def textSummarize(self, max_iter=1000, min_delta=0):
 		'''
 		Argument: Maximum number of iterations (default 10000), minimum difference in PR score between
 		consecutive iterations (default 0)
