@@ -29,10 +29,10 @@ The modification is done based on the intuition that the sentences occuring in t
 For running the program, do
 <br/>
 <code>
-python get_summary.py
+python get_summary.py <file range beginning> <file range ending>
 </code>
 <br/>
-The summarized texts will be available in the directory summarized_text.
+The summarized text can be obtained by tweaking get_summary.py to write the summary to file. By default, the get_summary.py will give the ROUGE-N score of the original TextRank system and TextRank v2.0.
 <br/>
 
 We aim to further experiment with different parameters of the algorithm. They are the window size and stemming/lemmatization prior to the method. Also, as the final part of the project we aim to generate headlines from the extracted keywords using possibly Recurrant Neural Networks (RNN).
