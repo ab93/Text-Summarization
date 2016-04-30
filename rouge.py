@@ -34,7 +34,7 @@ def filterText(text):
     text = notNum.sub('',text)
     return text
 
-def Rouge_n(candidate_sentences, reference_sentences, n=2):
+def Rouge_n(candidate_sentences, reference_sentences, n=3):
     candidate_sentences = filterText(candidate_sentences)
     reference_sentences = filterText(reference_sentences)
 
